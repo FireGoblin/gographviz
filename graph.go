@@ -14,6 +14,11 @@
 
 package gographviz
 
+type GraphableNode interface {
+	NodeInterface
+	EdgesInterface
+}
+
 //The analysed representation of the Graph parsed from the DOT format.
 type Graph struct {
 	Attrs     Attrs
@@ -69,12 +74,34 @@ func (this *Graph) AddEdge(src, dst string, directed bool, attrs map[string]stri
 	this.AddPortEdge(src, "", dst, "", directed, attrs)
 }
 
+func (this *Graph) AddEdgesInterface(edges EdgesInterface) {
+	for _, v := range edges.Edges() {
+		this.Edges.Add(v)
+	}
+}
+
 //Adds a node to a graph/subgraph.
 //If not subgraph exists use the name of the main graph.
 //This does not imply the adding of a missing subgraph.
 func (this *Graph) AddNode(parentGraph string, name string, attrs map[string]string) {
 	this.Nodes.Add(&Node{name, attrs})
 	this.Relations.Add(parentGraph, name)
+}
+
+func (this *Graph) AddNodeInterface(parentGraph string, node NodeInterface) {
+	this.Nodes.Add(&Node{node.Name(), node.Attrs()})
+	this.Relations.Add(parentGraph, node.Name())
+}
+
+func (this *Graph) AddGraphableNode(parentGraph string, node GraphableNode) {
+	this.AddNodeInterface(parentGraph, node)
+	this.AddEdgesInterface(node)
+}
+
+func (this *Graph) AddGraphableNodes(parentGraph string, nodes []GraphableNode) {
+	for _, n := range nodes {
+		this.AddGraphableNode(parentGraph, n)
+	}
 }
 
 func (this *Graph) getAttrs(graphName string) Attrs {

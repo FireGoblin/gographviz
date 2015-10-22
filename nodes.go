@@ -18,6 +18,11 @@ import (
 	"sort"
 )
 
+type NodeInterface interface {
+	Name() string
+	Attrs() Attrs
+}
+
 //Represents a Node.
 type Node struct {
 	Name  string

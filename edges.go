@@ -18,6 +18,17 @@ import (
 	"sort"
 )
 
+// type EdgeInterface interface {
+// 	Src() string
+// 	Dst() string
+// 	Directed() bool
+// 	Attrs() Attrs
+// }
+
+type EdgesInterface interface {
+	Edges() []*Edge
+}
+
 //Represents an Edge.
 type Edge struct {
 	Src     string
