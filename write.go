@@ -123,14 +123,3 @@ func (this *writer) Write() *ast.Graph {
 
 	return t
 }
-
-//Creates an Abstract Syntrax Tree from the Graph.
-func (g *Graph) WriteAst() *ast.Graph {
-	w := newWriter(g)
-	return w.Write()
-}
-
-//Returns a DOT string representing the Graph.
-func (g *Graph) String() string {
-	return g.WriteAst().String()
-}

@@ -14,6 +14,8 @@
 
 package gographviz
 
+import "github.com/awalterschulze/gographviz/ast"
+
 type GraphableNode interface {
 	NodeInterface
 	EdgesInterface
@@ -136,4 +138,15 @@ func (this *Graph) IsNode(name string) bool {
 func (this *Graph) IsSubGraph(name string) bool {
 	_, ok := this.SubGraphs.SubGraphs[name]
 	return ok
+}
+
+//Creates an Abstract Syntrax Tree from the Graph.
+func (g *Graph) WriteAst() *ast.Graph {
+	w := newWriter(g)
+	return w.Write()
+}
+
+//Returns a DOT string representing the Graph.
+func (g *Graph) String() string {
+	return g.WriteAst().String()
 }
