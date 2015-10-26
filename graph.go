@@ -15,10 +15,20 @@
 package gographviz
 
 import "github.com/awalterschulze/gographviz/ast"
+import "strings"
 
 type GraphableNode interface {
 	NodeInterface
 	EdgesInterface
+}
+
+func SafeName(s string) string {
+	lower := strings.ToLower(s)
+	if lower == "graph" || lower == "node" || lower == "edge" {
+		return s + "TYPE"
+	}
+
+	return s
 }
 
 //The analysed representation of the Graph parsed from the DOT format.
