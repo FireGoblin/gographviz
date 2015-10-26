@@ -24,7 +24,7 @@ type GraphableNode interface {
 
 func SafeName(s string) string {
 	lower := strings.ToLower(s)
-	if lower == "graph" || lower == "node" || lower == "edge" {
+	if lower == "graph" || lower == "node" || lower == "edge" || lower == "subgraph" {
 		return s + "TYPE"
 	}
 
