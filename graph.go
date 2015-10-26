@@ -22,10 +22,14 @@ type GraphableNode interface {
 	EdgesInterface
 }
 
+var unsafeNames = []string{"graph", "node", "edge", "subgraph"}
+
 func SafeName(s string) string {
 	lower := strings.ToLower(s)
-	if lower == "graph" || lower == "node" || lower == "edge" || lower == "subgraph" {
-		return s + "TYPE"
+	for _, v := range unsafeNames {
+		if lower == v {
+			return s + "TYPE"
+		}
 	}
 
 	return s
