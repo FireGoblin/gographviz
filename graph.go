@@ -22,7 +22,7 @@ type GraphableNode interface {
 	EdgesInterface
 }
 
-var unsafeNames = []string{"graph", "node", "edge", "subgraph"}
+var unsafeNames = []string{"graph", "node", "edge", "subgraph", "digraph"}
 
 func SafeName(s string) string {
 	lower := strings.ToLower(s)
