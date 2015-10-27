@@ -14,7 +14,7 @@
 
 package gographviz
 
-import "github.com/awalterschulze/gographviz/ast"
+import "github.com/firegoblin/gographviz/ast"
 import "strings"
 
 type GraphableNode interface {

@@ -16,7 +16,7 @@ package parser
 
 import (
 	"fmt"
-	"github.com/awalterschulze/gographviz/ast"
+	"github.com/firegoblin/gographviz/ast"
 	"io/ioutil"
 	"testing"
 )

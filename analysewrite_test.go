@@ -16,7 +16,7 @@ package gographviz
 
 import (
 	"fmt"
-	"github.com/awalterschulze/gographviz/parser"
+	"github.com/firegoblin/gographviz/parser"
 	"io/ioutil"
 	"os"
 	"testing"

@@ -1,8 +1,8 @@
 package gographviz
 
 import (
-	"github.com/awalterschulze/gographviz/ast"
-	"github.com/awalterschulze/gographviz/parser"
+	"github.com/firegoblin/gographviz/ast"
+	"github.com/firegoblin/gographviz/parser"
 	"testing"
 )
 
