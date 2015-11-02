@@ -35,13 +35,12 @@ type Edge struct {
 //Represents a set of Edges.
 type Edges struct {
 	SrcToDsts map[string]map[string]*Edge
-	DstToSrcs map[string]map[string]*Edge
 	Edges     []*Edge
 }
 
 //Creates a blank set of Edges.
 func NewEdges() *Edges {
-	return &Edges{make(map[string]map[string]*Edge), make(map[string]map[string]*Edge), make([]*Edge, 0)}
+	return &Edges{make(map[string]map[string]*Edge), make([]*Edge, 0)}
 }
 
 //Adds an Edge to the set of Edges.
@@ -53,12 +52,6 @@ func (this *Edges) Add(edge *Edge) {
 		this.SrcToDsts[edge.Src][edge.Dst] = edge
 	} else {
 		this.SrcToDsts[edge.Src][edge.Dst].Attrs.Extend(edge.Attrs)
-	}
-	if _, ok := this.DstToSrcs[edge.Dst]; !ok {
-		this.DstToSrcs[edge.Dst] = make(map[string]*Edge)
-	}
-	if _, ok := this.DstToSrcs[edge.Dst][edge.Src]; !ok {
-		this.DstToSrcs[edge.Dst][edge.Src] = edge
 	}
 	this.Edges = append(this.Edges, edge)
 }

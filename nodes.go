@@ -32,12 +32,11 @@ type Node struct {
 //Represents a set of Nodes.
 type Nodes struct {
 	Lookup map[string]*Node
-	Nodes  []*Node
 }
 
 //Creates a new set of Nodes.
 func NewNodes() *Nodes {
-	return &Nodes{make(map[string]*Node), make([]*Node, 0)}
+	return &Nodes{make(map[string]*Node)}
 }
 
 //Adds a Node to the set of Nodes, ammending the attributes of an already existing node.
@@ -48,7 +47,10 @@ func (this *Nodes) Add(node *Node) {
 		return
 	}
 	this.Lookup[node.Name] = node
-	this.Nodes = append(this.Nodes, node)
+}
+
+func (this *Nodes) Remove(key string) {
+	delete(this.Lookup, key)
 }
 
 //Returns a sorted list of nodes.

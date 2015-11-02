@@ -16,6 +16,8 @@ package gographviz
 
 import "github.com/firegoblin/gographviz/ast"
 import "strings"
+import "fmt"
+import "os"
 
 type GraphableNode interface {
 	NodeInterface
@@ -96,12 +98,38 @@ func (this *Graph) AddEdgesInterface(edges EdgesInterface) {
 	}
 }
 
+func (this *Graph) RemoveEdgelessNodes(parentGraph string) {
+	for key := range this.Nodes.Lookup {
+		_, ok := this.Edges.SrcToDsts[key]
+		if !ok {
+			found := false
+			for _, val := range this.Edges.SrcToDsts {
+				_, ok := val[key]
+				if ok {
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				fmt.Fprintln(os.Stderr, "removing the node:", key)
+				this.RemoveNode(parentGraph, key)
+			}
+		}
+	}
+}
+
 //Adds a node to a graph/subgraph.
 //If not subgraph exists use the name of the main graph.
 //This does not imply the adding of a missing subgraph.
 func (this *Graph) AddNode(parentGraph string, name string, attrs map[string]string) {
 	this.Nodes.Add(&Node{name, attrs})
 	this.Relations.Add(parentGraph, name)
+}
+
+func (this *Graph) RemoveNode(parentGraph string, name string) {
+	this.Nodes.Remove(name)
+	this.Relations.Remove(parentGraph, name)
 }
 
 func (this *Graph) AddNodeInterface(parentGraph string, node NodeInterface) {

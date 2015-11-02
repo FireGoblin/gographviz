@@ -17,6 +17,7 @@ package gographviz
 import (
 	"fmt"
 	"github.com/firegoblin/gographviz/ast"
+	"os"
 )
 
 type writer struct {
@@ -67,21 +68,31 @@ func (this *writer) newNodeStmt(name string) *ast.NodeStmt {
 	}
 }
 
-func (this *writer) newLocation(name string, port string) ast.Location {
+func (this *writer) newLocation(name string, port string) (ast.Location, error) {
 	if this.IsNode(name) {
-		return this.newNodeId(name, port)
+		return this.newNodeId(name, port), nil
 	} else if this.IsSubGraph(name) {
 		if len(port) != 0 {
 			panic(fmt.Sprintf("subgraph cannot have a port: %v", port))
 		}
-		return this.newSubGraph(name)
+		return this.newSubGraph(name), nil
 	}
-	panic(fmt.Sprintf("%v is not a node or a subgraph", name))
+	return nil, fmt.Errorf("%v is not a node or a subgraph", name)
 }
 
 func (this *writer) newEdgeStmt(edge *Edge) *ast.EdgeStmt {
-	src := this.newLocation(edge.Src, edge.SrcPort)
-	dst := this.newLocation(edge.Dst, edge.DstPort)
+	src, err := this.newLocation(edge.Src, edge.SrcPort)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "Src:", edge.Src, ", Dst:", edge.Dst)
+		return nil
+	}
+	dst, err := this.newLocation(edge.Dst, edge.DstPort)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, "Src:", edge.Src, ", Dst:", edge.Dst)
+		return nil
+	}
 	stmt := &ast.EdgeStmt{
 		Source: src,
 		EdgeRHS: ast.EdgeRHS{
@@ -104,7 +115,10 @@ func (this *writer) Write() *ast.Graph {
 	t.StmtList = appendAttrs(t.StmtList, this.Attrs)
 
 	for _, edge := range this.Edges.Edges {
-		t.StmtList = append(t.StmtList, this.newEdgeStmt(edge))
+		holder := this.newEdgeStmt(edge)
+		if holder != nil {
+			t.StmtList = append(t.StmtList, this.newEdgeStmt(edge))
+		}
 	}
 
 	subGraphs := this.SubGraphs.Sorted()

@@ -22,12 +22,11 @@ import (
 //Each node belongs the main graph or a subgraph.
 type Relations struct {
 	ParentToChildren map[string]map[string]bool
-	ChildToParents   map[string]map[string]bool
 }
 
 //Creates an empty set of relations.
 func NewRelations() *Relations {
-	return &Relations{make(map[string]map[string]bool), make(map[string]map[string]bool)}
+	return &Relations{make(map[string]map[string]bool)}
 }
 
 //Adds a node to a parent graph.
@@ -36,10 +35,13 @@ func (this *Relations) Add(parent string, child string) {
 		this.ParentToChildren[parent] = make(map[string]bool)
 	}
 	this.ParentToChildren[parent][child] = true
-	if _, ok := this.ChildToParents[child]; !ok {
-		this.ChildToParents[child] = make(map[string]bool)
+}
+
+func (this *Relations) Remove(parent string, child string) {
+	delete(this.ParentToChildren[parent], child)
+	if len(this.ParentToChildren[parent]) == 0 {
+		delete(this.ParentToChildren, parent)
 	}
-	this.ChildToParents[child][parent] = true
 }
 
 func (this *Relations) SortedChildren(parent string) []string {
